@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IBDA Laundry | Kelompok 7</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="header-area">
+        <div class="main-header header-sticky">
+          <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+              <!-- Logo -->
+              <div class="logo">
+                <a href="index.html"><img src="assets/img/logo/logo.png" alt="" /></a>
+              </div>
+              <!-- Menu -->
+              <nav class="main-menu d-none d-lg-block">
+                <ul id="navigation">
+                  <li><a href="index.html">Home</a></li>
+                  <li><a href="about.html">About</a></li>
+                  <li><a href="services.html">Services</a></li>
+                  <li><a href="cart.html" class="active">Cart</a></li>
+                  <li><a href="contact.html">Contact</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Cart Section -->
+    <main class="container mt-5 mb-5">
+      <h2 class="text-center mb-4">Your Cart</h2>
+      <div class="table-responsive">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Service</th>
+              <th scope="col">Description</th>
+              <th scope="col">Quantity</th>
+              <th scope="col">Price</th>
+              <th scope="col">Total</th>
+              <th scope="col">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dummy Data Row 1 -->
+            <tr>
+              <td>Regular Laundry</td>
+              <td>Wash and dry up to 5kg</td>
+              <td>
+                <input type="number" class="form-control" value="1" />
+              </td>
+              <td>Rp 25,000</td>
+              <td>Rp 25,000</td>
+              <td>
+                <button class="btn btn-danger btn-sm">Remove</button>
+              </td>
+            </tr>
+            <!-- Dummy Data Row 2 -->
+            <tr>
+              <td>Ironing Service</td>
+              <td>Iron up to 10 clothes</td>
+              <td>
+                <input type="number" class="form-control" value="2" />
+              </td>
+              <td>Rp 15,000</td>
+              <td>Rp 30,000</td>
+              <td>
+                <button class="btn btn-danger btn-sm">Remove</button>
+              </td>
+            </tr>
+            <!-- Dummy Data Row 3 -->
+            <tr>
+              <td>Dry Cleaning</td>
+              <td>Premium dry cleaning for delicate items</td>
+              <td>
+                <input type="number" class="form-control" value="1" />
+              </td>
+              <td>Rp 50,000</td>
+              <td>Rp 50,000</td>
+              <td>
+                <button class="btn btn-danger btn-sm">Remove</button>
+              </td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" class="text-end"><strong>Total</strong></td>
+              <td><strong>Rp 105,000</strong></td>
+              <td></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="text-center mt-4">
+        <a href="checkout.html" class="btn btn-primary">Proceed to Checkout</a>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-area footer-padding section-bg2">
+      <div class="container">
+        <div class="footer-bottom-area text-center">
+          <p>Copyright © 2024 IBDA Laundry. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="assets/js/jquery-1.12.4.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+  </body>
+</html>

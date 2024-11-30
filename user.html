@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IBDA Laundry | Kelompok 7</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <!-- Header -->
+    <header>
+      <div class="header-area">
+        <div class="main-header header-sticky">
+          <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+              <!-- Logo -->
+              <div class="logo">
+                <a href="index.html"><img src="assets/img/logo/logo.png" alt="" /></a>
+              </div>
+              <!-- Menu -->
+              <nav class="main-menu d-none d-lg-block">
+                <ul id="navigation">
+                  <li><a href="index.html">Home</a></li>
+                  <li><a href="cart.html">Cart</a></li>
+                  <li><a href="user.html" class="active">User</a></li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- User Profile Section -->
+    <main class="container mt-5 mb-5">
+      <h2 class="text-center mb-4">User Profile</h2>
+
+      <!-- User Details -->
+      <section class="mb-5">
+        <h4>Personal Information</h4>
+        <div class="card p-3">
+          <div class="mb-3">
+            <strong>Name:</strong> John Doe
+          </div>
+          <div class="mb-3">
+            <strong>Password:</strong> ********
+          </div>
+          <div class="mb-3">
+            <strong>Address:</strong> 123 Main Street, Jakarta
+          </div>
+          <button class="btn btn-primary"><a href="edit.html">Edit Profile</a></button>
+        </div>
+      </section>
+
+      <!-- Transaction History -->
+      <section>
+        <h4>Transaction History</h4>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Order ID</th>
+              <th scope="col">Service</th>
+              <th scope="col">Total</th>
+              <th scope="col">Date</th>
+              <th scope="col">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Dummy Data -->
+            <tr>
+              <td>#001</td>
+              <td>Regular Laundry</td>
+              <td>Rp 25,000</td>
+              <td>2024-11-30</td>
+              <td>
+                <span class="badge bg-success">Completed</span>
+              </td>
+            </tr>
+            <tr>
+              <td>#002</td>
+              <td>Ironing Service</td>
+              <td>Rp 30,000</td>
+              <td>2024-12-01</td>
+              <td>
+                <span class="badge bg-warning">In Progress</span>
+              </td>
+            </tr>
+            <tr>
+              <td>#003</td>
+              <td>Dry Cleaning</td>
+              <td>Rp 50,000</td>
+              <td>2024-12-02</td>
+              <td>
+                <span class="badge bg-primary">Out for Delivery</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-area footer-padding section-bg2">
+      <div class="container">
+        <div class="footer-bottom-area text-center">
+          <p>Copyright © 2024 IBDA Laundry. All rights reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <script src="assets/js/jquery-1.12.4.min.js"></script>
+    <script src="assets/js/bootstrap.min.js"></script>
+  </body>
+</html>
