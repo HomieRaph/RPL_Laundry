@@ -1,0 +1,1 @@
+app_secret_key = 'BAD_SECRET_KEY'
