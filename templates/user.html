@@ -22,8 +22,8 @@
               <nav class="main-menu d-none d-lg-block">
                 <ul id="navigation">
                   <li><a href="/">Home</a></li>
-                  <li><a href="/cart">Cart</a></li>
-                  <li><a href="/user" class="active">User</a></li>
+                  <li><a href="/member/cart">Cart</a></li>
+                  <li><a href="/member/my" class="active">User</a></li>
                 </ul>
               </nav>
             </div>
@@ -41,15 +41,15 @@
         <h4>Personal Information</h4>
         <div class="card p-3">
           <div class="mb-3">
-            <strong>Name:</strong> John Doe
+            <strong>Name:</strong> {{member.name}}
           </div>
           <div class="mb-3">
-            <strong>Password:</strong> ********
+            <strong>Email</strong> {{member.email}}
           </div>
           <div class="mb-3">
-            <strong>Address:</strong> 123 Main Street, Jakarta
+            <strong>Address:</strong> {{ member.address[0].address if member.address[0] else '' }}
           </div>
-          <button class="btn btn-primary"><a href=/edit>Edit Profile</a></button>
+          <button class="btn btn-primary"><a href=/member/edit>Edit Profile</a></button>
         </div>
       </section>
 
@@ -61,41 +61,36 @@
             <tr>
               <th scope="col">Order ID</th>
               <th scope="col">Service</th>
-              <th scope="col">Total</th>
               <th scope="col">Date</th>
+              <th scope="col">Price</th>
+              <th scope="col">Qty</th>
+              <th scope="col">Total</th>
               <th scope="col">Status</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Dummy Data -->
+            {% for order in history %}
             <tr>
-              <td>#001</td>
-              <td>Regular Laundry</td>
-              <td>Rp 25,000</td>
-              <td>2024-11-30</td>
+              <td>#{{ order.order_id }}</td>
+              <td>{{ order.service.service_name }}</td>
+              <td>{{ order.date.strftime('%Y-%m-%d') }}</td>
+              <td>Rp {{ order.service.service_price }}</td>
+              <td>{{ order.qty }}</td>
+              <td>Rp {{ order.service.service_price * order.qty}}</td>
               <td>
-                <span class="badge bg-success">Completed</span>
+                {% if order.status == 'Completed' %}
+                  <span class="badge bg-success">{{ order.status }}</span>
+                {% elif order.status == 'In Progress' %}
+                  <span class="badge bg-warning">{{ order.status }}</span>
+                {% elif order.status == 'Out for Delivery' %}
+                  <span class="badge bg-primary">{{ order.status }}</span>
+                {% else %}
+                  <span class="badge bg-secondary">{{ order.status }}</span>
+                {% endif %}
               </td>
             </tr>
-            <tr>
-              <td>#002</td>
-              <td>Ironing Service</td>
-              <td>Rp 30,000</td>
-              <td>2024-12-01</td>
-              <td>
-                <span class="badge bg-warning">In Progress</span>
-              </td>
-            </tr>
-            <tr>
-              <td>#003</td>
-              <td>Dry Cleaning</td>
-              <td>Rp 50,000</td>
-              <td>2024-12-02</td>
-              <td>
-                <span class="badge bg-primary">Out for Delivery</span>
-              </td>
-            </tr>
-          </tbody>
+            {% endfor %}
+          </tbody>          
         </table>
       </section>
     </main>

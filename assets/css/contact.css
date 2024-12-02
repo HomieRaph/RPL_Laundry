@@ -1,0 +1,9 @@
+.catalog-item:hover {
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Add shadow on hover */
+    transition: box-shadow 0.3s ease; /* Smooth transition for shadow */
+}
+
+.check-space{
+    margin-right: 7px;
+    padding-top: 5px;
+  }

@@ -37,14 +37,14 @@
     <!-- Checkout Section -->
     <main class="container mt-5 mb-5">
       <h2 class="text-center mb-4">Checkout</h2>
-      <form id="checkoutForm">
+      <form id="checkoutForm" method="post" action="/member/checkout">
         <!-- Billing Details -->
-        <div class="mb-4">
+        <!-- <div class="mb-4">
           <h5>Billing Details</h5>
           <div class="row">
             <div class="col-md-6">
               <label for="fullName" class="form-label">Full Name</label>
-              <input type="text" id="fullName" class="form-control" required />
+              <input type="text" id="fullName" class="form-control" value="{{ member.member }}" required />
             </div>
             <div class="col-md-6">
               <label for="phone" class="form-label">Phone Number</label>
@@ -55,7 +55,7 @@
             <label for="address" class="form-label">Address</label>
             <textarea id="address" class="form-control" rows="3" required></textarea>
           </div>
-        </div>
+        </div> -->
 
         <!-- Payment Method -->
         <div class="mb-4">
@@ -69,7 +69,7 @@
               value="transfer"
               required
             />
-            <label class="form-check-label" for="paymentTransfer">Bank Transfer</label>
+            <label class="form-check-label" for="paymentTransfer">QRIS</label>
           </div>
           <div class="form-check">
             <input
@@ -97,27 +97,18 @@
               </tr>
             </thead>
             <tbody>
+              {% for item in cart %}
               <tr>
-                <td>Regular Laundry</td>
-                <td>1</td>
-                <td>Rp 25,000</td>
-                <td>Rp 25,000</td>
+                <td>{{ item.service }}</td>
+                <td>{{ item.qty }}</td>
+                <td>Rp {{ item.price }}</td>
+                <td>Rp {{ item.total }}</td>
               </tr>
-              <tr>
-                <td>Ironing Service</td>
-                <td>2</td>
-                <td>Rp 15,000</td>
-                <td>Rp 30,000</td>
-              </tr>
-              <tr>
-                <td>Dry Cleaning</td>
-                <td>1</td>
-                <td>Rp 50,000</td>
-                <td>Rp 50,000</td>
-              </tr>
+
+              {% endfor %}
               <tr>
                 <td colspan="3" class="text-end"><strong>Total</strong></td>
-                <td><strong>Rp 105,000</strong></td>
+                <td><strong>Rp {{ total_price }}</strong></td>
               </tr>
             </tbody>
           </table>
@@ -143,11 +134,11 @@
     <script src="assets/js/bootstrap.min.js"></script>
     <script>
       // Simulate Payment Process
-      document.getElementById("checkoutForm").addEventListener("submit", function (e) {
-        e.preventDefault();
-        alert("Payment successful!");
-        window.location.href = "history.html";
-      });
+      // document.getElementById("checkoutForm").addEventListener("submit", function (e) {
+      //   e.preventDefault();
+      //   alert("Payment successful!");
+      //   window.location.href = "history.html";
+      // });
     </script>
   </body>
 </html>

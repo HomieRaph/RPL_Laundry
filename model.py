@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 class Admin(db.Model):
     __tablename__ = "admin"
 
-    id = db.Column('admin_id', db.Integer, primary_key=True)
+    admin_id = db.Column('admin_id', db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(100))
     name = db.Column(db.String(100), unique=True)
@@ -36,7 +36,9 @@ class Member(db.Model):
     password = db.Column(db.String(100))
     
     # One-to-Many relationship with the Address table
-    addresses = db.relationship('Address', back_populates='member', cascade="all, delete-orphan")
+    address = db.relationship('Address', back_populates='member', cascade="all, delete-orphan")
+    cart = db.relationship('Cart', back_populates='member', cascade="all, delete-orphan")
+    laundry = db.relationship('Laundry', back_populates='member', cascade="all, delete-orphan")
     
     
     def __init__(self, phone, name, email, password):
@@ -56,12 +58,67 @@ class Address(db.Model):
     address = db.Column(db.String(250), nullable=False)
     
     # Relationship back to Member
-    member = db.relationship('Member', back_populates='addresses')
+    member = db.relationship('Member', back_populates='address')
 
     def __init__(self, member_id, address):
         self.member_id = member_id
         self.address = address
 
+class Service(db.Model):
+    __tablename__ = "service"
+
+    service_id = db.Column(db.Integer, primary_key=True)
+    service_name = db.Column(db.String(150), nullable=False)
+    service_description = db.Column(db.String(250), nullable=False)
+    service_price = db.Column(db.Float, nullable=False)
+    
+    # Relationship back to Cart
+    cart = db.relationship('Cart', back_populates='service')
+    laundry = db.relationship('Laundry', back_populates='service')
+    
+    def __init__(self, service_name, service_description, service_price):
+        self.service_name = service_name
+        self.service_description = service_description
+        self.service_price = service_price
+
+
+class Cart(db.Model):
+    __tablename__ = "cart"
+    
+    cart_id = db.Column(db.Integer, primary_key=True)
+    member_id = db.Column(db.Integer, db.ForeignKey('member.member_id'), nullable=False)
+    service_id = db.Column(db.Integer, db.ForeignKey('service.service_id'), nullable=False)
+    qty = db.Column(db.Integer, nullable=False)
+    
+    # Relationship back to Member
+    member = db.relationship('Member', back_populates='cart')
+    service = db.relationship('Service', back_populates='cart')
+    
+    
+    def __init__(self, member_id, service_id, qty):
+        self.member_id = member_id
+        self.service_id = service_id
+        self.qty = qty
+
+class Laundry(db.Model):
+    __tablename__ = "laundry"
+
+    order_id = db.Column(db.Integer, primary_key=True, autoincrement=True)  
+    member_id = db.Column(db.Integer, db.ForeignKey('member.member_id'), nullable=False)  
+    
+    date = db.Column(db.DateTime, default=db.func.current_timestamp())  
+    status = db.Column(db.String(50), default="Pending")
+    service_id = db.Column(db.Integer, db.ForeignKey('service.service_id'), nullable=False)
+    qty = db.Column(db.Integer, nullable=False)
+    
+    member = db.relationship('Member', back_populates='laundry')
+    service = db.relationship('Service', back_populates='laundry')
+
+    def __init__(self, member_id, service_id, qty, status="Pending"):
+        self.member_id = member_id
+        self.service_id = service_id
+        self.qty = qty
+        self.status = status
 
 def verify_login_admin(email, password):
     admin = Admin.query.filter(Admin.email == email, Admin.password == password).first()
@@ -132,5 +189,65 @@ def get_members(member_id):
     member = Member.query.filter(Member.member_id == member_id).first() 
     return member
 
+def get_cart_item(member_id):
+    cart = Cart.query.filter(Cart.member_id == member_id).all()
+    response = []
+    total_price = 0
+    for i in cart:
+        response.append({
+            "id": i.cart_id,
+            "service_id": i.service.service_id,
+            "service": i.service.service_name,
+            "description": i.service.service_description,
+            "qty": i.qty,
+            "price": i.service.service_price,
+            "total": i.qty * i.service.service_price
+        })
+        total_price += i.qty * i.service.service_price
+    return response, total_price
 
+def delete_cart_item(cart_id):
+    try:
+        cart = Cart.query.filter(Cart.cart_id == cart_id).first()
+        db.session.delete(cart)
+        db.session.commit()
+        return True
+    except:
+        db.session.rollback()
+        abort(500)
 
+def get_all_orders():
+    orders = Laundry.query.distinct().all()
+    response = []
+    for i in orders:
+        response.append({
+            "order_id": i.order_id,
+            "member": i.member.name,
+            "service": i.service.service_name,
+            "qty": i.qty,
+            "status": i.status,
+            "date": i.date
+        })
+    return response
+
+def get_all_services():
+    services = Service.query.all()
+    response = []
+    for i in services:
+        response.append({
+            "service_id": i.service_id,
+            "service_name": i.service_name,
+            "service_description": i.service_description,
+            "service_price": i.service_price
+        })
+    return response
+
+def add_cart_item(member_id, service_id, qty):
+    cart = Cart(member_id=member_id, service_id=service_id, qty=qty)
+    try:
+        db.session.add(cart)
+        db.session.commit()
+        return True
+    except:
+        db.session.rollback()
+        abort(500)

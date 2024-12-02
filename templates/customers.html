@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>IBDA Laundry | Manage Customers</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        html, body {
+            height: 100%;
+        }
+        .wrapper {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        .main-content {
+            flex: 1;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Sidebar Start -->
+                <nav class="col-md-2 d-md-block bg-light sidebar">
+                    <div class="position-sticky">
+                        <div class="sidebar-header text-center p-3">
+                            <h2>IBDA Laundry</h2>
+                        </div>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a href="/admin" class="nav-link">Manage Orders</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/customers" class="nav-link active">Manage Customers</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/reports" class="nav-link">Reports</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/admin/logout" class="nav-link text-danger">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+
+                <!-- Main Content Start -->
+                <main class="col-md-10 ms-sm-auto px-4 main-content">
+                    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                        <h1 class="h2">Manage Customers</h1>
+                    </div>
+
+                    <!-- Customer List Section -->
+                    <section class="card">
+                        <div class="card-header">
+                            <h4>Customer List</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Customer ID</th>
+                                            <th>Name</th>
+                                            <th>Phone</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for customer in customers %}
+                                        <tr>
+                                            <td>{{ customer.member_id }}</td>
+                                            <td>{{ customer.name }}</td>
+                                            <td>{{ customer.phone }}</td>
+                                            <td>
+                                                <button 
+                                                    class="btn btn-primary btn-sm view-customer" 
+                                                    data-member-id="{{ customer.member_id }}" 
+                                                    data-bs-toggle="modal" 
+                                                    data-bs-target="#customerModal">
+                                                    View
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            </div>
+        </div>
+
+        <!-- Modal for Customer Details -->
+        <div class="modal fade" id="customerModal" tabindex="-1" aria-labelledby="customerModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="customerModalLabel">Customer Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h5>Personal Information</h5>
+                        <p><strong>Name:</strong> <span id="customerName"></span></p>
+                        <p><strong>Phone:</strong> <span id="customerPhone"></span></p>
+                        <p><strong>Email:</strong> <span id="customerEmail"></span></p>
+                        <hr />
+                        <h5>Transaction History</h5>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Service</th>
+                                        <th>Quantity</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="transactionHistory"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".view-customer").on("click", function () {
+                const memberId = $(this).data("member-id");
+
+                // Clear previous data
+                $("#customerName").text("");
+                $("#customerPhone").text("");
+                $("#customerEmail").text("");
+                $("#transactionHistory").html("");
+
+                // Fetch customer data and transactions
+                $.ajax({
+                    url: `/admin/customers/${memberId}`,
+                    method: "GET",
+                    success: function (response) {
+                        // Populate customer data
+                        $("#customerName").text(response.name);
+                        $("#customerPhone").text(response.phone);
+                        $("#customerEmail").text(response.email);
+
+                        // Populate transaction history
+                        response.transactions.forEach(transaction => {
+                            const row = `
+                                <tr>
+                                    <td>${transaction.order_id}</td>
+                                    <td>${transaction.service_name}</td>
+                                    <td>${transaction.qty}</td>
+                                    <td>${transaction.status}</td>
+                                    <td>${transaction.date}</td>
+                                </tr>`;
+                            $("#transactionHistory").append(row);
+                        });
+                    },
+                    error: function () {
+                        alert("Failed to load customer data!");
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
