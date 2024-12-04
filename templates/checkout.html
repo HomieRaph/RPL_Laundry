@@ -39,23 +39,57 @@
       <h2 class="text-center mb-4">Checkout</h2>
       <form id="checkoutForm" method="post" action="/member/checkout">
         <!-- Billing Details -->
-        <!-- <div class="mb-4">
+        <div class="mb-4">
           <h5>Billing Details</h5>
           <div class="row">
             <div class="col-md-6">
               <label for="fullName" class="form-label">Full Name</label>
-              <input type="text" id="fullName" class="form-control" value="{{ member.member }}" required />
+              <input type="text" id="fullName" class="form-control" value="{{ member.name }}" required />
             </div>
             <div class="col-md-6">
               <label for="phone" class="form-label">Phone Number</label>
-              <input type="text" id="phone" class="form-control" required />
+              <input type="text" id="phone" class="form-control" value="{{ member.phone }}" required />
             </div>
           </div>
           <div class="mt-3">
             <label for="address" class="form-label">Address</label>
-            <textarea id="address" class="form-control" rows="3" required></textarea>
+            <input type="text" id="address" class="form-control" value="{{ address }}" required />
           </div>
-        </div> -->
+
+          <!-- Delivery or Take Laundry -->
+          <div class="mt-4">
+            <h6>Service Option</h6>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serviceOption" id="takeLaundry" value="takeLaundry" checked />
+              <label class="form-check-label" for="takeLaundry">
+                Take Laundry
+              </label>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="radio" name="serviceOption" id="delivery" value="delivery" />
+              <label class="form-check-label" for="delivery">
+                Delivery
+              </label>
+            </div>
+          </div>
+
+          <!-- Branch and Delivery Price -->
+          <div id="deliveryOptions" class="mt-3" style="display: none;">
+            <label for="storeBranch" class="form-label">Select Store Branch</label>
+            <select id="storeBranch" class="form-select">
+              <option value="" selected disabled>Choose a branch</option>
+              <option value="branch1" data-price="5000">Cabang Margonda Raya - Rp 5.000</option>
+              <option value="branch2" data-price="6000">Cabang Jakarta Kota - Rp 6.000</option>
+              <option value="branch3" data-price="7000">Cabang Manggarai - Rp 7.000</option>
+              <option value="branch3" data-price="8000">Cabang Cawang - Rp 8.000</option>
+              <option value="branch3" data-price="10000">Cabang Pluit - Rp 10.000</option>
+            </select>
+            <div class="mt-2">
+              <label for="estimatedPrice" class="form-label">Estimated Delivery Price</label>
+              <input type="text" id="estimatedPrice" class="form-control" readonly />
+            </div>
+          </div>
+        </div>
 
         <!-- Payment Method -->
         <div class="mb-4">
@@ -107,8 +141,12 @@
 
               {% endfor %}
               <tr>
+                <td colspan="3" class="text-end"><strong>Delivery Price</strong></td>
+                <td><strong>Rp 5.000</strong></td>
+              </tr>
+              <tr>
                 <td colspan="3" class="text-end"><strong>Total</strong></td>
-                <td><strong>Rp {{ total_price }}</strong></td>
+                <td><strong>Rp {{ total_price + 5000 }}</strong></td>
               </tr>
             </tbody>
           </table>
@@ -139,6 +177,30 @@
       //   alert("Payment successful!");
       //   window.location.href = "history.html";
       // });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const takeLaundryRadio = document.getElementById("takeLaundry");
+        const deliveryRadio = document.getElementById("delivery");
+        const deliveryOptions = document.getElementById("deliveryOptions");
+        const storeBranch = document.getElementById("storeBranch");
+        const estimatedPrice = document.getElementById("estimatedPrice");
+    
+        // Toggle delivery options based on selected service
+        takeLaundryRadio.addEventListener("change", () => {
+          deliveryOptions.style.display = "none";
+        });
+    
+        deliveryRadio.addEventListener("change", () => {
+          deliveryOptions.style.display = "block";
+        });
+    
+        // Update estimated delivery price when branch is selected
+        storeBranch.addEventListener("change", function () {
+          const selectedOption = storeBranch.options[storeBranch.selectedIndex];
+          estimatedPrice.value = selectedOption.dataset.price || "";
+        });
+      });
     </script>
   </body>
 </html>

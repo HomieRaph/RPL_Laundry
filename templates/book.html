@@ -85,7 +85,7 @@
             <span
               class="mr-4"
               style="font-size: 18px; font-weight: 600; color: #6785ff"
-              >Hi, Dian</span
+              >Hi, Deffrand Ganteng</span
             >
             <a href="/member/login" class="header-btn2">Login</a>
           </div>
@@ -125,9 +125,7 @@
               <div class="row">
                 <!-- Catalog Item 1 -->
                 <div class="col-md-4">
-                  <div
-                    class="card h-100 text-center shadow-sm mb-4 catalog-item"
-                  >
+                  <div class="card h-100 text-center shadow-sm mb-4 catalog-item">
                     <div class="card-body p-4">
                       <img
                         src="assets/img/contact/cuci-kering.jpg"
@@ -142,7 +140,15 @@
                       />
                       <h3 class="card-title">Cuci Kering (Pakaian)</h3>
                       <p class="card-text">4k/kg</p>
-                      <button class="btn btn-primary" type="button" onclick="addToCart(1)">Add to Cart</button>
+                      <div id="cartControl-1" class="cart-control">
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          onclick="addToCart(1)"
+                        >
+                          Add to Cart
+                        </button>
+                      </div>
                       <div class="checkbox mt-4">
                         <label>
                           <input type="checkbox" value="" class="check-space-1" />
@@ -474,35 +480,44 @@
     <!-- JS here -->
 
     <script>
-      function addToCart(service_id) {
-        const checkSpace = document.querySelector(`.check-space-${service_id}`);
-        const isExpress = checkSpace.checked;
-        const service = {
-          service_id: service_id,
-          qty: 1,
-          express: isExpress,
-        };
-        
-        fetch('/member/cart/add', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(service),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            if (data.status === 'success') {
-              alert('Service added to cart');
-            } else {
-              alert('Failed to add service to cart');
-            }
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
+      // Initialize cart items
+      const cart = {};
+    
+      function addToCart(itemId) {
+        const cartControl = document.getElementById(`cartControl-${itemId}`);
+    
+        // Add item to cart and display the counter
+        if (!cart[itemId]) {
+          cart[itemId] = 1;
+          cartControl.innerHTML = `
+            <div class="d-flex align-items-center justify-content-center">
+              <button class="btn btn-secondary me-2" onclick="updateCart(${itemId}, -1)">-</button>
+              <span id="cartCount-${itemId}" class="mx-2">${cart[itemId]}</span>
+              <button class="btn btn-secondary ms-2" onclick="updateCart(${itemId}, 1)">+</button>
+            </div>
+          `;
+        }
       }
-
+    
+      function updateCart(itemId, change) {
+        const cartCount = document.getElementById(`cartCount-${itemId}`);
+        const cartControl = document.getElementById(`cartControl-${itemId}`);
+    
+        cart[itemId] = (cart[itemId] || 0) + change;
+    
+        if (cart[itemId] <= 0) {
+          // Remove item from cart and restore "Add to Cart" button
+          delete cart[itemId];
+          cartControl.innerHTML = `
+            <button class="btn btn-primary" type="button" onclick="addToCart(${itemId})">
+              Add to Cart
+            </button>
+          `;
+        } else {
+          // Update the displayed quantity
+          cartCount.textContent = cart[itemId];
+        }
+      }
     </script>
 
     <script src="./assets/js/vendor/modernizr-3.5.0.min.js"></script>

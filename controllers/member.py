@@ -270,7 +270,9 @@ def checkout_page():
     
     member_id = decoded_jwt['id']
     member = Member.query.get(member_id)
+    address = member.address[0].address
     cart, total_price = get_cart_item(member_id)
+    
     
     # for item in cart:
     #     laundry = Laundry(member_id=member_id, service_id=item['service_id'], qty=item['qty'])
@@ -279,7 +281,7 @@ def checkout_page():
     
     # print(cart)
     
-    return render_template('checkout.html', member=member, cart=cart, total_price=total_price)
+    return render_template('checkout.html', member=member, address=address, cart=cart, total_price=total_price)
 
 
 @member.route('/checkout', methods=['POST'])

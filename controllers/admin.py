@@ -147,3 +147,7 @@ def revenue_report():
     ]
 
     return render_template('reports.html', total_revenue=total_revenue, transactions=transaction_data)
+
+@app.route('/admin/employee')
+def employee():
+    return render_template('employee.html')
